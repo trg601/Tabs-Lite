@@ -156,10 +156,12 @@ object UgApi {
                 prevId = currentId
                 currentId = nextId
                 nextId = tab.tabId
-                if (currentId != null) {
+                if (currentId != null)
                     playlistEntryDao.insert(-2, currentId, nextId, prevId, System.currentTimeMillis(), 0)
-                }
-                tabFullDao.insert(tab)
+
+                // add tab information if it's not already in the database
+                if (!tabFullDao.exists(tab.tabId))
+                    tabFullDao.insert(tab)
             }
             playlistEntryDao.insert(-2, nextId!!, null, currentId, System.currentTimeMillis(), 0)  // save the last one
         } else {
